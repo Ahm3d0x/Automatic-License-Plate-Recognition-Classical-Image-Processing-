@@ -1,4 +1,17 @@
-%% ECE 228: ALPR for Egyptian License Plates
+%% ========================================================================
+% Zagazig University — Faculty of Engineering
+% Electronics and Communications Engineering Department
+% Course: ECE 228: Image Processing
+% Project: Automatic License Plate Recognition (Classical Image Processing)
+%
+% Group Number: 21
+% Team Members:
+% 1. Ahmed Mohamed Attia Mohamed
+% 2. Ali El-Shawadfy Abdallah El-Sayed
+% 3. Omar Hosny Mohamed Ahmed Abouzeid
+% 4. Anas Ali Hammad El-Sayed
+% 5. Abdelhay Lotfy El-Sayed El-Gawahry
+%% ========================================================================
 
 clc; clear; close all;
 
@@ -35,7 +48,7 @@ img_files     = all_files(sort(keep_idx));
 num_images    = length(img_files);
 fprintf('Found %d images in: %s\n', num_images, dataset_dir);
 
-%% 3. Accumulators Setup (MUST be outside the loop)
+%% 3. Accumulators Setup
 total_detected    = 0;
 results_filenames = cell(num_images,1);
 results_detected  = false(num_images,1);
@@ -371,35 +384,48 @@ for img_idx = 1:num_images
             title('5. NOT Detected');
         end
 
-        % Explicit Result Output on Image (Subplot 8) - SIDE BY SIDE
+% Explicit Result Output on Image (Subplot 8) - PRO DESIGN FIXED
         subplot(2,4,8); 
         cla; 
         axis off;
+        
+        % CRITICAL: Fix axis limits to prevent auto-stretching
+        xlim([0 1]); 
+        ylim([0 1]);
         title('8. Final Result');
         
         if strcmp(detection_status, 'detected')
-            % Print Status
-            text(0.5, 0.75, 'Result: DETECTED', 'FontSize', 18, 'Units', 'normalized', ...
+            % Status Text
+            text(0.5, 0.85, 'Result: DETECTED', 'FontSize', 18, 'Units', 'data', ...
                  'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0 0.5 0], ...
                  'HorizontalAlignment', 'center');
              
-            % Print Label
-            text(0.5, 0.50, 'Plate Characters:', 'FontSize', 14, 'Units', 'normalized', ...
-                 'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0.2 0.2 0.2], ...
+            % Plate Background Rectangle
+            rectangle('Position', [0.05, 0.30, 0.90, 0.35], 'Curvature', 0.1, ...
+                      'FaceColor', [0.95 0.95 0.95], 'EdgeColor', 'k', 'LineWidth', 2);
+            
+            % Blue Top Band (EGYPT)
+            rectangle('Position', [0.05, 0.50, 0.90, 0.15], ...
+                      'FaceColor', [0.1 0.4 0.8], 'EdgeColor', 'none');
+            text(0.5, 0.575, 'EGYPT            مصر', 'FontSize', 12, 'Units', 'data', ...
+                 'FontName', 'Arial', 'FontWeight', 'bold', 'Color', 'w', ...
                  'HorizontalAlignment', 'center');
              
-            % Print Numbers (Left Side - Dark Red)
-            text(0.30, 0.25, str_num, 'FontSize', 26, 'Units', 'normalized', ...
-                 'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0.7 0 0], ...
+            % Separator Line
+            line([0.5 0.5], [0.30 0.50], 'Color', 'k', 'LineWidth', 2);
+             
+            % Numbers (Left Side - Red)
+            text(0.275, 0.40, str_num, 'FontSize', 30, 'Units', 'data', ...
+                 'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0.8 0 0], ...
                  'HorizontalAlignment', 'center', 'Interpreter', 'none');
                  
-            % Print Letters (Right Side - Dark Blue)
-            text(0.70, 0.25, str_let, 'FontSize', 26, 'Units', 'normalized', ...
-                 'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0 0 0.7], ...
+            % Letters (Right Side - Blue)
+            text(0.725, 0.40, str_let, 'FontSize', 30, 'Units', 'data', ...
+                 'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0 0 0.8], ...
                  'HorizontalAlignment', 'center', 'Interpreter', 'none');
         else
             % Print Not Detected
-            text(0.5, 0.5, 'NOT DETECTED', 'FontSize', 22, 'Units', 'normalized', ...
+            text(0.5, 0.5, 'NOT DETECTED', 'FontSize', 22, 'Units', 'data', ...
                  'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0.8 0 0], ...
                  'HorizontalAlignment', 'center');
         end
@@ -415,12 +441,21 @@ end
 %% 5. Export Results
 fprintf('\n=== Done === Detected: %d / %d\n', total_detected, num_images);
 
-% Create table with separate columns for Letters and Numbers
 T = table(results_filenames, results_detected, results_letters, results_numbers, ...
           'VariableNames',{'Filename','Is_Detected','Letters','Numbers'});
-          
-writetable(T, fullfile(results_dir,'alpr_results.xlsx'));
-disp('Saved: alpr_results.xlsx');
+
+output_file = fullfile(results_dir, 'alpr_results.xlsx');
+
+% Added try-catch to prevent crash if Excel is open
+try
+    writetable(T, output_file);
+    fprintf('Saved: %s\n', output_file);
+catch
+    fprintf('\n[WARNING] Could not overwrite %s (File might be open in Excel).\n', output_file);
+    alt_file = fullfile(results_dir, sprintf('alpr_results_%s.xlsx', datestr(now, 'HHMMSS')));
+    writetable(T, alt_file);
+    fprintf('Saved instead to: %s\n', alt_file);
+end
 
 %% LOCAL FUNCTIONS
 
