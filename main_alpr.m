@@ -384,7 +384,7 @@ for img_idx = 1:num_images
             title('5. NOT Detected');
         end
 
-% Explicit Result Output on Image (Subplot 8) - PRO DESIGN FIXED
+% Explicit Result Output on Image (Subplot 8) - MAXIMUM SPACE DESIGN
         subplot(2,4,8); 
         cla; 
         axis off;
@@ -400,27 +400,27 @@ for img_idx = 1:num_images
                  'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0 0.5 0], ...
                  'HorizontalAlignment', 'center');
              
-            % Plate Background Rectangle
-            rectangle('Position', [0.05, 0.30, 0.90, 0.35], 'Curvature', 0.1, ...
+            % Plate Background Rectangle (MAXIMUM width from 0 to 1)
+            rectangle('Position', [0.0, 0.30, 1.0, 0.35], 'Curvature', 0.1, ...
                       'FaceColor', [0.95 0.95 0.95], 'EdgeColor', 'k', 'LineWidth', 2);
             
             % Blue Top Band (EGYPT)
-            rectangle('Position', [0.05, 0.50, 0.90, 0.15], ...
+            rectangle('Position', [0.0, 0.50, 1.0, 0.15], ...
                       'FaceColor', [0.1 0.4 0.8], 'EdgeColor', 'none');
-            text(0.5, 0.575, 'EGYPT            مصر', 'FontSize', 12, 'Units', 'data', ...
+            text(0.5, 0.575, 'EGYPT                     مصر', 'FontSize', 12, 'Units', 'data', ...
                  'FontName', 'Arial', 'FontWeight', 'bold', 'Color', 'w', ...
                  'HorizontalAlignment', 'center');
              
-            % Separator Line
-            line([0.5 0.5], [0.30 0.50], 'Color', 'k', 'LineWidth', 2);
+            % Separator Line (At 0.54 to balance 4 numbers vs 3 letters perfectly)
+            line([0.54 0.54], [0.30 0.50], 'Color', 'k', 'LineWidth', 2);
              
-            % Numbers (Left Side - Red)
-            text(0.275, 0.40, str_num, 'FontSize', 30, 'Units', 'data', ...
+            % Numbers (Left Side - Red) - Font reduced to 26 for more breathing room
+            text(0.27, 0.40, str_num, 'FontSize', 26, 'Units', 'data', ...
                  'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0.8 0 0], ...
                  'HorizontalAlignment', 'center', 'Interpreter', 'none');
                  
-            % Letters (Right Side - Blue)
-            text(0.725, 0.40, str_let, 'FontSize', 30, 'Units', 'data', ...
+            % Letters (Right Side - Blue) - Font reduced to 26 for more breathing room
+            text(0.77, 0.40, str_let, 'FontSize', 26, 'Units', 'data', ...
                  'FontName', 'Arial', 'FontWeight', 'bold', 'Color', [0 0 0.8], ...
                  'HorizontalAlignment', 'center', 'Interpreter', 'none');
         else
