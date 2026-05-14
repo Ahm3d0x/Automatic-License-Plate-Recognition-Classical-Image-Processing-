@@ -4,7 +4,7 @@
 % Course: ECE 228: Image Processing
 % Project: Automatic License Plate Recognition (Classical Image Processing)
 %
-% Group Number: 21
+% Group Number: 6
 % Team Members:
 % 1. Ahmed Mohamed Attia Mohamed
 % 2. Ali El-Shawadfy Abdallah El-Sayed
@@ -272,7 +272,7 @@ for img_idx = 1:num_images
                 
                 if ~isempty(templates)
                     [best_match, score] = match_character(char_img, templates, true);
-                    if score > 0.1 
+                    if score > 0.2
                         matched_numbers{end+1} = best_match;
                         num_scores(end+1) = score;
                         valid_numbers_boxes = [valid_numbers_boxes; numbers_boxes(c,:)];
@@ -297,7 +297,7 @@ for img_idx = 1:num_images
                 
                 if ~isempty(templates)
                     [best_match, score] = match_character(char_img, templates, false);
-                    if score > 0.1
+                    if score > 0.2
                         matched_letters{end+1} = best_match;
                         let_scores(end+1) = score;
                         valid_letters_boxes = [valid_letters_boxes; letters_boxes(c,:)];
